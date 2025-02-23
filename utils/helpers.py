@@ -6,7 +6,8 @@ import dill
 import matplotlib.pyplot as plt
 import os
 from PIL import Image 
-from moviepy.editor import VideoFileClip, ImageClip, CompositeVideoClip
+# from moviepy.editor import VideoFileClip, ImageClip, CompositeVideoClip
+from moviepy import VideoFileClip, ImageClip, CompositeVideoClip
 
 def save_object(ob, filename):
     dill.dump(ob, file = open(filename+".pickle", "wb"))
@@ -40,7 +41,9 @@ def visualizing(traced_path, workspace, filename, show_video=False):
         traced_path[0].plot_configuration(workspace)
         camera.snap()
     if show_video:
-        plt.show()
+        # plt.show()
+        pass
+
     animation = camera.animate()
     animation.save(filename + '.mp4', writer='ffmpeg', fps = 15)
     #animation.save(filename + '.gif', writer='Pillow', fps=25)
@@ -49,8 +52,9 @@ def visualizing(traced_path, workspace, filename, show_video=False):
    
     
     video = VideoFileClip(filename + '.mp4')
-    logo =ImageClip("media/logo.png").set_duration(video.duration)
-    logo = logo.set_pos(("left", "top"))
+    # logo =ImageClip("media/logo.png").set_duration(video.duration)
+    logo =ImageClip("media/logo.png").with_duration(video.duration)
+    # logo = logo.set_pos(("left", "top"))
     video_with_watermark = CompositeVideoClip([video, logo])
     video_with_watermark.write_videofile("media/pathing.mp4", codec="libx264")
     os.remove(filename + '.mp4')
